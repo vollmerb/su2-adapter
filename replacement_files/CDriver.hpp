@@ -571,6 +571,8 @@ public:
    */
   void SetVertexTemperature(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallTemp);
 
+  void SetVertexVelocity(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallVel);
+  
   /*!
    * \brief Get the heat flux at a vertex on a specified marker (3 components).
    * \param[in] iMarker - Marker identifier.

@@ -680,6 +680,11 @@ void CDriver::SetVertexTemperature(unsigned short iMarker, unsigned long iVertex
   geometry_container[ZONE_0][INST_0][MESH_0]->SetCustomBoundaryTemperature(iMarker, iVertex, val_WallTemp / config_container[ZONE_0]->GetTemperature_Ref());
 }
 
+void CDriver::SetVertexVelocity(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallVel){
+  // preCICE: non-dimensionalize before setting
+  geometry_container[ZONE_0][INST_0][MESH_0]->SetCustomBoundaryVelocity(iMarker, iVertex, val_WallVel / config_container[ZONE_0]->GetVelocity_Ref());
+}
+
 vector<passivedouble> CDriver::GetVertexHeatFluxes(unsigned short iMarker, unsigned long iVertex) const {
 
   unsigned long iPoint;
