@@ -67,6 +67,10 @@ void CDriver::PythonInterface_Preprocessing(CConfig **config, CGeometry ****geom
               case ISOTHERMAL:
                 for(iVertex=0; iVertex < geometry[iZone][INST_0][iMesh]->GetnVertex(iMarker); iVertex++){
                   geometry[iZone][INST_0][iMesh]->SetCustomBoundaryTemperature(iMarker, iVertex, config[iZone]->GetIsothermal_Temperature(Marker_Tag)/config[iZone]->GetTemperature_Ref());
+                  
+                  if (config[iZone]->GetIsothermal_Blowing()){
+                  	geometry[iZone][INST_0][iMesh]->SetCustomBoundaryVelocity(iMarker, iVertex, 0.0);
+                  }
                 }
                 break;
               case INLET_FLOW:
