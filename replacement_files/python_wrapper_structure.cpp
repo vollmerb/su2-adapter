@@ -70,6 +70,7 @@ void CDriver::PythonInterface_Preprocessing(CConfig **config, CGeometry ****geom
                   
                   if (config[iZone]->GetIsothermal_Blowing()){
                   	geometry[iZone][INST_0][iMesh]->SetCustomBoundaryVelocity(iMarker, iVertex, 0.0);
+                  	geometry[iZone][INST_0][iMesh]->SetCustomBoundaryDiffusion(iMarker, iVertex, 0.0);
                   }
                 }
                 break;
@@ -678,6 +679,38 @@ passivedouble CDriver::GetVertexTemperature(unsigned short iMarker, unsigned lon
 
 }
 
+passivedouble CDriver::GetVertexMassFrac(unsigned short iMarker, unsigned long iVertex) const {
+
+  unsigned long iPoint;
+  su2double vertexWallMassFrac(0.0);
+
+  iPoint = geometry_container[ZONE_0][INST_0][MESH_0]->vertex[iMarker][iVertex]->GetNode();
+
+  if(geometry_container[ZONE_0][INST_0][MESH_0]->nodes->GetDomain(iPoint)){
+    vertexWallMassFrac = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL]->GetNodes()->GetMassFraction(iPoint,0);
+  }
+
+  //preCICE: re-dimensionalize before returning
+  return SU2_TYPE::GetValue(vertexWallMassFrac);
+
+}
+
+passivedouble CDriver::GetVertexPressure(unsigned short iMarker, unsigned long iVertex) const {
+
+  unsigned long iPoint;
+  su2double vertexWallPressure(0.0);
+
+  iPoint = geometry_container[ZONE_0][INST_0][MESH_0]->vertex[iMarker][iVertex]->GetNode();
+
+  if(geometry_container[ZONE_0][INST_0][MESH_0]->nodes->GetDomain(iPoint)){
+    vertexWallPressure = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL]->GetNodes()->GetPressure(iPoint);
+  }
+
+  //preCICE: re-dimensionalize before returning
+  return SU2_TYPE::GetValue(vertexWallPressure * config_container[ZONE_0]->GetPressure_Ref());
+
+}
+
 void CDriver::SetVertexTemperature(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallTemp){
 
   // preCICE: non-dimensionalize before setting
@@ -687,6 +720,11 @@ void CDriver::SetVertexTemperature(unsigned short iMarker, unsigned long iVertex
 void CDriver::SetVertexVelocity(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallVel){
   // preCICE: non-dimensionalize before setting
   geometry_container[ZONE_0][INST_0][MESH_0]->SetCustomBoundaryVelocity(iMarker, iVertex, val_WallVel / config_container[ZONE_0]->GetVelocity_Ref());
+}
+
+void CDriver::SetVertexDiffusion(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallVel){
+  // preCICE: non-dimensionalize before setting
+  geometry_container[ZONE_0][INST_0][MESH_0]->SetCustomBoundaryDiffusion(iMarker, iVertex, val_WallVel / config_container[ZONE_0]->GetLength_Ref());
 }
 
 vector<passivedouble> CDriver::GetVertexHeatFluxes(unsigned short iMarker, unsigned long iVertex) const {

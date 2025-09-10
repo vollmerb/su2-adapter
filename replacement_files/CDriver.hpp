@@ -562,6 +562,9 @@ public:
    * \return Temperature of the vertex.
    */
   passivedouble GetVertexTemperature(unsigned short iMarker, unsigned long iVertex) const;
+  
+  passivedouble GetVertexMassFrac(unsigned short iMarker, unsigned long iVertex) const;
+  passivedouble GetVertexPressure(unsigned short iMarker, unsigned long iVertex) const;
 
   /*!
    * \brief Set the temperature of a vertex on a specified marker.
@@ -572,6 +575,7 @@ public:
   void SetVertexTemperature(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallTemp);
 
   void SetVertexVelocity(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallVel);
+  void SetVertexDiffusion(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallDiff);
   
   /*!
    * \brief Get the heat flux at a vertex on a specified marker (3 components).
