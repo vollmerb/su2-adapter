@@ -62,6 +62,11 @@ void CDriver::PythonInterface_Preprocessing(CConfig **config, CGeometry ****geom
               case HEAT_FLUX:
                 for(iVertex=0; iVertex < geometry[iZone][INST_0][iMesh]->GetnVertex(iMarker); iVertex++){
                   geometry[iZone][INST_0][iMesh]->SetCustomBoundaryHeatFlux(iMarker, iVertex, config[iZone]->GetWall_HeatFlux(Marker_Tag)/config[iZone]->GetHeat_Flux_Ref());
+                
+                	if (config[iZone]->GetIsothermal_Blowing()){
+                  	geometry[iZone][INST_0][iMesh]->SetCustomBoundaryVelocity(iMarker, iVertex, 0.0);
+                  	geometry[iZone][INST_0][iMesh]->SetCustomBoundaryDiffusion(iMarker, iVertex, 0.0);
+                 	}
                 }
                 break;
               case ISOTHERMAL:
@@ -89,9 +94,9 @@ void CDriver::PythonInterface_Preprocessing(CConfig **config, CGeometry ****geom
 
       geometry[iZone][INST_0][MESH_0]->UpdateCustomBoundaryConditions(geometry[iZone][INST_0], config[iZone]);
 
-      if ((config[iZone]->GetKind_Solver() == MAIN_SOLVER::EULER) ||
-          (config[iZone]->GetKind_Solver() == MAIN_SOLVER::NAVIER_STOKES) ||
-          (config[iZone]->GetKind_Solver() == MAIN_SOLVER::RANS)) {
+      if ((config[iZone]->GetKind_Solver() == MAIN_SOLVER::EULER) || (config[iZone]->GetKind_Solver() == MAIN_SOLVER::NEMO_EULER) ||
+          (config[iZone]->GetKind_Solver() == MAIN_SOLVER::NAVIER_STOKES) || (config[iZone]->GetKind_Solver() == MAIN_SOLVER::NEMO_NAVIER_STOKES) ||
+          (config[iZone]->GetKind_Solver() == MAIN_SOLVER::RANS) || (config[iZone]->GetKind_Solver() == MAIN_SOLVER::NEMO_RANS)) {
 
         solver[iZone][INST_0][MESH_0][FLOW_SOL]->UpdateCustomBoundaryConditions(geometry[iZone][INST_0], config[iZone]);
       }
